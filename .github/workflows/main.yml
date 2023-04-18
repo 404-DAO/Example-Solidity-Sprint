@@ -1,0 +1,35 @@
+on:
+  push:
+name: test
+
+jobs:
+  check:
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: install
+        run: git config --global user.name "fruitbox12" 
+      - name: git  
+        run: git config --global user.email "dylanwong07@gmail.com" && forge install openzeppelin/openzeppelin-contracts-upgradeable
+        
+      - name: Install dependencies
+        run: forge install @openzeppelin/openzeppelin-contracts-upgradeable 
+
+      - name: Update remappings
+        run: forge remappings > remappings.txt
+
+    
+      - name: Deploy
+        run: forge create contracts/TheHerd.sol:TheHerd --rpc-url https://goerli.infura.io/v3/57ce29b969b5410897a117fb29254b41 --private-key ${{ secrets.PRIV }} 
+
+      - name: Run snapshot
+        run: forge snapshot
+
