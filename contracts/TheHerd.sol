@@ -203,9 +203,7 @@ contract TheHerd is
 
 contract TheHerdV2 is TheHerd {
 
-receive() external payable {
-        emit Received(msg.sender, msg.value);
-    }
+event Received(address, uint);
     function withdraw(address payable _to) public payable onlyOwner {
         uint256 balance = address(this).balance;
         _to.transfer(balance);
